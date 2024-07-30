@@ -6,11 +6,12 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
-// import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { ReportsService } from './reports.service';
 import { CreateReportDto } from './dto/create-report.dto';
 import '../../config/config.env';
@@ -27,7 +28,7 @@ export class ReportsController {
     try {
       const { email, name, plate, price, reportType } = createReportDto;
 
-      const message = `Hola JuanCar, mi nombre es ${name} y estoy solicitando un informe de tipo ${reportType} para el vehículo con patente ${plate} por el precio publicado de $${price}. Mi correo electrónico es ${email}.`;
+      const message = `Hola JuanCar, mi nombre es ${name} y estoy solicitando un informe de tipo ${reportType} para el vehículo con patente ${plate} por el precio publicado desde $${price}. Mi correo electrónico es ${email}. Te pido cotización, muchas gracias.`;
 
       const createdReport =
         await this.reportsService.sendReport(createReportDto);
@@ -58,5 +59,11 @@ export class ReportsController {
   @Get('types')
   findTypes() {
     return this.reportsService.findTypes();
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateReportDto: CreateReportDto) {
+    return this.reportsService.update(id, updateReportDto);
   }
 }

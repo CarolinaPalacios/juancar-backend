@@ -16,7 +16,7 @@ export class AvailabilityController {
     const startDate = moment().tz('America/Argentina/Buenos_Aires').format();
 
     const endDate = moment().tz('America/Buenos_Aires').toDate();
-    endDate.setDate(endDate.getDate() + 60);
+    endDate.setDate(endDate.getDate() + 120);
 
     await this.availabilityService.generateAvailability(startDate, endDate);
 

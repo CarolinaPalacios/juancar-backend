@@ -40,4 +40,16 @@ export class ReportsService {
     const reportTypes = await this.reportModel.distinct('reportType').exec();
     return reportTypes;
   }
+
+  async update(id: string, updateReportDto: CreateReportDto): Promise<Report> {
+    return this.reportModel
+      .findByIdAndUpdate(
+        id,
+        {
+          price: updateReportDto.price,
+        },
+        { returnDocument: 'after' },
+      )
+      .exec();
+  }
 }

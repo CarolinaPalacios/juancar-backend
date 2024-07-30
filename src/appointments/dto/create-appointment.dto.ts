@@ -50,7 +50,7 @@ export class CreateAppointmentDto {
   year: string;
 
   @IsString()
-  @IsEnum([FuelType.GASOLINE, FuelType.DIESEL, FuelType.GNC])
+  @IsEnum([FuelType.GASOLINE, FuelType.DIESEL])
   fuelType: string;
 
   @IsBoolean()

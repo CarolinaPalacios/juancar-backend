@@ -36,7 +36,7 @@ export class AvailabilityService {
 
     while (currentDate.isSameOrBefore(endDate, 'day')) {
       const dayOfWeek = currentDate.day();
-      if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+      if (dayOfWeek >= 1 && dayOfWeek <= 6) {
         const startDateTime = currentDate.clone().set({
           hour: parseInt(startTime.split(':')[0]),
           minute: parseInt(startTime.split(':')[1]),

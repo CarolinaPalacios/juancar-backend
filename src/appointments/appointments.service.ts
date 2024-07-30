@@ -14,8 +14,20 @@ export class AppointmentsService {
     private readonly availabilityService: AvailabilityService,
   ) {}
 
-  async findAll(): Promise<Appointment[]> {
-    return this.appointmentModel.find().exec();
+  async findAll(
+    name: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<{ data: Appointment[]; total: number }> {
+    const offset = (page - 1) * limit;
+    const query = name ? { name: { $regex: name, $options: 'i' } } : {};
+
+    const [data, total] = await Promise.all([
+      this.appointmentModel.find(query).skip(offset).limit(limit).exec(),
+      this.appointmentModel.countDocuments(query),
+    ]);
+
+    return { data, total };
   }
 
   async findOne(id: string): Promise<Appointment> {

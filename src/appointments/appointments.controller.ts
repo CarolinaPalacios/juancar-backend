@@ -1,5 +1,6 @@
 import {
   Body,
+  Query,
   Controller,
   Delete,
   Get,
@@ -16,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 import { AppointmentsService } from './appointments.service';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { SellerType } from './schema/appointment.schema';
+import { FuelType, SellerType } from './schema/appointment.schema';
 import '../../config/config.env';
 
 @ApiBearerAuth()
@@ -27,8 +28,12 @@ export class AppointmentsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.appointmentsService.findAll();
+  findAll(
+    @Query('name') name: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number = 10,
+  ) {
+    return this.appointmentsService.findAll(name, page, limit);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -41,10 +46,23 @@ export class AppointmentsController {
   @HttpCode(201)
   async create(@Body() createAppointmentDto: CreateAppointmentDto) {
     try {
-      const { name, address, email, phone, location, date, sellerType, time } =
-        createAppointmentDto;
+      const {
+        name,
+        address,
+        email,
+        phone,
+        location,
+        date,
+        sellerType,
+        time,
+        willAttend,
+        brand,
+        model,
+        year,
+        fuelType,
+      } = createAppointmentDto;
 
-      const message = `Hola JuanCar, mi nombre es ${name} y estoy solicitando una reserva para el día ${date} a las ${time}hs. Mi correo electrónico es ${email} y mi teléfono de contacto es ${phone}. Reservé en la dirección ${address}, ubicada en ${location}. Además, quisiera informarte que el vendedor es de tipo ${sellerType === SellerType.AGENCY ? 'Agencia' : 'Particular'}.`;
+      const message = `Hola JuanCar, mi nombre es ${name} y estoy solicitando una reserva para el día ${date} a las ${time}hs. El auto a realizar el informe es un ${brand} ${model} ${year} a ${fuelType === FuelType.DIESEL ? 'diesel' : 'gasolina'}. Mi correo electrónico es ${email} y mi teléfono de contacto es ${phone}. Reservé en la dirección ${address}, ubicada en ${location}. Además, quisiera informarte que el vendedor es de tipo ${sellerType === SellerType.AGENCY ? 'Agencia' : 'Particular'}. ${willAttend ? 'Estaré presente durante la verificación' : 'No estaré presente durante la verificación'}.`;
 
       const createdAppointment =
         await this.appointmentsService.create(createAppointmentDto);

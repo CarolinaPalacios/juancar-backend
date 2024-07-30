@@ -9,7 +9,6 @@ export enum SellerType {
 export enum FuelType {
   GASOLINE = 'GASOLINE',
   DIESEL = 'DIESEL',
-  GNC = 'GNC',
 }
 
 export type AppointmentDocument = HydratedDocument<Appointment>;
