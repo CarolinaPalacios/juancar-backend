@@ -44,15 +44,24 @@ export class AvailabilityService {
         });
 
         if (currentDate.isSameOrAfter(startDateTime, 'minute')) {
-          const slots = this.generateSlotsForDate(
-            currentDate.format('YYYY-MM-DD'),
-            startTime,
-            endTime,
-            interval,
-          );
+          const existingSlots = await this.availabilityModel.find({
+            date: currentDate.format('YYYY-MM-DD'),
+          });
+          if (existingSlots.length > 0) {
+            console.log(
+              `Slots already exist for ${currentDate.format('YYYY-MM-DD')}, skipping...`,
+            );
+          } else {
+            const slots = this.generateSlotsForDate(
+              currentDate.format('YYYY-MM-DD'),
+              startTime,
+              endTime,
+              interval,
+            );
 
-          for (const slot of slots) {
-            availabeSlots.push({ ...slot, available: true });
+            for (const slot of slots) {
+              availabeSlots.push({ ...slot, available: true });
+            }
           }
         }
       }
